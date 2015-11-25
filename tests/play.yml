@@ -1,0 +1,14 @@
+# test file for percona-server
+---
+- hosts: all
+  roles:
+    - ../../
+  vars:
+    percona_server_root_password: mysql_root_pass
+    percona_server_databases:
+      - { name: test_db1 }
+    percona_server_users:
+      - { name: test_user1, password: sapun, priv: "test_db1.*:ALL" }
+    percona_server_config:
+      bind-address: "0.0.0.0"
+      performance_schema: "off"
