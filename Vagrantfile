@@ -11,7 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
     
     node.vm.provider "parallels" do |vm, override|
-      override.vm.box = "parallels/ubuntu-14.04-i386"
+      override.vm.box = "parallels/ubuntu-12.04-i386"
       vm.name = ROLE_NAME
       vm.customize ["set", :id, "--memsize", "256"]
     end
