@@ -58,6 +58,10 @@
   with_items: percona_server_users
   when: item.name is defined and item.name != ""
 
+# support old distros that does not create my.cnf on install
+- name: create /etc/mysql/my.cnf if does not exists
+  command: touch /etc/mysql/my.cnf creates=/etc/mysql/my.cnf
+
 - name: configure mysqld
   ini_file:
     dest: /etc/mysql/my.cnf
