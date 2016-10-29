@@ -43,7 +43,7 @@
     login_user: root
     login_password: "{{ percona_server_root_password }}"
     state: "{{ item.state | default('present') }}"
-  with_items: percona_server_databases
+  with_items: "{{ percona_server_databases }}"
   when: item.name is defined and item.name != ""
 
 - name: ensure database users exists
@@ -55,7 +55,7 @@
     login_user: root
     login_password: "{{ percona_server_root_password }}"
     state: "{{ item.state | default('present') }}"
-  with_items: percona_server_users
+  with_items: "{{ percona_server_users }}"
   when: item.name is defined and item.name != ""
 
 # support old distros that does not create my.cnf on install
@@ -70,6 +70,6 @@
     value: "{{ item.value }}"
     mode: 0600
     backup: yes
-  with_dict: percona_server_config
+  with_dict: "{{ percona_server_config }}"
   notify:
     - restart mysql
