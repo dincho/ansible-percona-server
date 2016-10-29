@@ -4,7 +4,7 @@ galaxy_info:
   description: Ansible role to set up percona-server server in Debian-like systems
   company: vmandco.com
   license: MIT
-  min_ansible_version: 1.6
+  min_ansible_version: 1.8
   platforms:
     - name: Ubuntu
       versions:
