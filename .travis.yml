@@ -4,8 +4,7 @@ python: "2.7"
 
 env:
   - ANSIBLE_VERSION=latest
-  - ANSIBLE_VERSION=1.9.0.1
-  - ANSIBLE_VERSION=1.8
+  - ANSIBLE_VERSION=2.2.1
 
 branches:
   only:
@@ -16,6 +15,10 @@ before_install:
 
   # Remove mysql-*
   - sudo apt-get remove --purge 'mysql-*'
+
+  # Delete old data to prevent upgrade issues
+  - sudo rm -rf /var/lib/mysql
+  - sudo rm -rf /var/log/mysql
 
 install:
   # Install Ansible.
