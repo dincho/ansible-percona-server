@@ -22,6 +22,8 @@ install:
   - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible; else pip install ansible==$ANSIBLE_VERSION; fi
 
 script:
+  - ansible --version
+
   # Check the role/playbook's syntax.
   - ansible-playbook -i localhost, --connection=local tests/play.yml --syntax-check
 
