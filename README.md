@@ -16,7 +16,7 @@ Requirements
 Role Variables
 --------------
 
-* `percona_server_version`: [default: `5.6`]: Version to install
+* `percona_server_version`: [default: `5.7`]: Version to install
 * `percona_server_root_password`: [default: undefined]: Root password (**required**)
 * `percona_server_databases`: [default: empty]: List of databases ([mysql_db](http://docs.ansible.com/ansible/mysql_db_module.html) list)
 * `percona_server_users`: [default: empty]: List of users ([mysql_user](http://docs.ansible.com/ansible/mysql_user_module.html) list)
