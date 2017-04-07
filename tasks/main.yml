@@ -68,7 +68,7 @@
     section: mysqld
     option: "{{ item.key }}"
     value: "{{ item.value }}"
-    mode: 0600
+    mode: 0644
     backup: yes
   with_dict: "{{ percona_server_config }}"
   notify:
