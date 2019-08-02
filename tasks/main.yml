@@ -15,6 +15,7 @@
 
 - name: Install Percona server
   apt:
+    update_cache: yes
     name: percona-server-server-{{ percona_server_version }}
     state: present
   environment:
