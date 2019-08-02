@@ -3,28 +3,20 @@
   fail: msg="You must set root password (percona_server_root_password)"
   when: percona_server_root_password is not defined
 
-- name: Add Percona apt signing key
-  apt_key: keyserver=keyserver.ubuntu.com id=8507EFA5 state=present
-
-- name: Add Percona repositories
-  apt_repository:
-    repo: "{{ item }}"
-    state: present
-    update_cache: yes
-  with_items:
-     - deb http://repo.percona.com/apt {{ ansible_distribution_release }} main
-     - deb-src http://repo.percona.com/apt {{ ansible_distribution_release }} main
+- name: Install Percona packages
+  apt:
+    deb: https://repo.percona.com/apt/percona-release_latest.{{ ansible_distribution_release }}_all.deb
 
 - name: Install python packages
-  apt: pkg={{ item }} state=present
-  with_items:
-    - python-mysqldb
+  apt:
+    pkg:
+      - python-mysqldb
+    state: present
 
-- name: Install Percona packages
-  apt: pkg={{ item }} state=present
-  with_items:
-    - percona-server-server-{{ percona_server_version }}
-    - percona-server-client-{{ percona_server_version }}
+- name: Install Percona server
+  apt:
+    name: percona-server-server-{{ percona_server_version }}
+    state: present
   environment:
     DEBIAN_FRONTEND: noninteractive
   notify:
