@@ -11,13 +11,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
     
     node.vm.provider "parallels" do |vm, override|
-      override.vm.box = "parallels/ubuntu-12.04-i386"
+      override.vm.box = "parallels/ubuntu-16.04"
       vm.name = ROLE_NAME
       vm.customize ["set", :id, "--memsize", "256"]
     end
 
     node.vm.provision "ansible" do |ansible|
-        ansible.sudo = true
+        ansible.become = true
         ansible.playbook = "tests/play.yml"
         ansible.verbose = "vv"
     end
