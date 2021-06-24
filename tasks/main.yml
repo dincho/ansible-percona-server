@@ -3,25 +3,28 @@
   fail: msg="You must set root password (percona_server_root_password)"
   when: percona_server_root_password is not defined
 
+- name: Add Percona repositories
+  apt:
+    deb: https://repo.percona.com/apt/percona-release_latest.{{ansible_distribution_release}}_all.deb
+
 - name: Install Percona packages
   apt:
-    deb: https://repo.percona.com/apt/percona-release_latest.{{ ansible_distribution_release }}_all.deb
-
-- name: Install python packages
-  apt:
-    pkg:
-      - python-mysqldb
+    name:
+      - libssl-dev  # mysqlclient dependency
+      - percona-server-server-{{ percona_server_version }}
+      - percona-server-client-{{ percona_server_version }}
     state: present
-
-- name: Install Percona server
-  apt:
-    update_cache: yes
-    name: percona-server-server-{{ percona_server_version }}
-    state: present
+    update_cache: true
   environment:
     DEBIAN_FRONTEND: noninteractive
   notify:
     - set root password
+
+- name: Install python packages
+  apt:
+    name:
+      - "{{ mysql_python_package }}"
+    state: present
 
 #need to set mysql root pass
 - meta: flush_handlers

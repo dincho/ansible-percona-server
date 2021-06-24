@@ -3,3 +3,5 @@ percona_server_version: 5.7
 percona_server_databases: []
 percona_server_users: []
 percona_server_config: {}
+
+mysql_python_package: python3-mysqldb
