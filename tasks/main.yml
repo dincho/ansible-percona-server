@@ -3,6 +3,14 @@
   fail: msg="You must set root password (percona_server_root_password)"
   when: percona_server_root_password is not defined
 
+# https://www.percona.com/doc/percona-server/5.7/installation/apt_repo.html#installing-percona-server-from-percona-apt-repository
+- name: Install percona-release dependencies
+  apt:
+    name: gnupg2
+    state: present
+    update_cache: yes
+    cache_valid_time: 300
+
 - name: Install Percona packages
   apt:
     deb: https://repo.percona.com/apt/percona-release_latest.{{ ansible_distribution_release }}_all.deb
