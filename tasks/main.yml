@@ -3,17 +3,31 @@
   fail: msg="You must set root password (percona_server_root_password)"
   when: percona_server_root_password is not defined
 
+# https://github.com/percona/repo-config-docs/blob/master/source/percona-release.rst
+# https://www.percona.com/doc/percona-server/5.6/installation/apt_repo.html
+# https://www.percona.com/doc/percona-server/5.7/installation/apt_repo.html
+# https://www.percona.com/doc/percona-server/8.0/installation/apt_repo.html
+- name: Update apt cache and install percona-release dependencies
+  apt:
+    name:
+      - gnupg2
+      - curl
+      - wget
+      - lsb-release
+    state: present
+    update_cache: yes
+    cache_valid_time: 300
+
 - name: Install Percona packages
   apt:
     deb: https://repo.percona.com/apt/percona-release_latest.{{ ansible_distribution_release }}_all.deb
 
-- name: Install python packages
-  apt:
-    pkg:
-      - python-mysqldb
-    state: present
+# https://www.percona.com/doc/percona-server/LATEST/installation/apt_repo.html
+- name: "Enable Percona repository (Percona version >= 8)"
+  command: "percona-release setup ps{{ percona_server_version_major }}{{ percona_server_version_minor }}"
+  when: percona_server_version_major|int >= 8
 
-- name: Install Percona server
+- name: Install Percona server (version < 8)
   apt:
     update_cache: yes
     name: percona-server-server-{{ percona_server_version }}
@@ -22,6 +36,40 @@
     DEBIAN_FRONTEND: noninteractive
   notify:
     - set root password
+  when: percona_server_version_major|int < 8
+
+- name: "Install | configure debconf for version 8.0 (Use Legacy Authentication Method)"
+  debconf:
+    name: 'percona-server-server'
+    question: 'percona-server-server/default-auth-override'
+    value: 'Use Legacy Authentication Method (Retain MySQL 5.x Compatibility)'
+    vtype: select
+  changed_when: false
+  when:
+    - mysql_version_major|int >= 8
+
+- name: Install Percona server (version >= 8)
+  apt:
+    update_cache: yes
+    name: "percona-server-server={{ percona_server_version_major }}.{{ percona_server_version_minor }}*"
+    state: present
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  notify:
+    - set root password
+  when: percona_server_version_major|int >= 8
+
+- name: "Install package dependencies for ansible MySQL modules (python 2)"
+  apt:
+    name: "python-mysqldb"
+  when:
+    - ansible_python.version.major == 2
+
+- name: "Install package dependencies for ansible MySQL modules (python 3)"
+  apt:
+    name: "python3-mysqldb"
+  when:
+    - ansible_python.version.major == 3
 
 #need to set mysql root pass
 - meta: flush_handlers
