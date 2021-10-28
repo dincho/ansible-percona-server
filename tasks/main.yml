@@ -38,6 +38,16 @@
     - set root password
   when: percona_server_version_major|int < 8
 
+- name: "Install | configure debconf for version 8.0 (Use Legacy Authentication Method)"
+  debconf:
+    name: 'percona-server-server'
+    question: 'percona-server-server/default-auth-override'
+    value: 'Use Legacy Authentication Method (Retain MySQL 5.x Compatibility)'
+    vtype: select
+  changed_when: false
+  when:
+    - mysql_version_major|int >= 8
+
 - name: Install Percona server (version >= 8)
   apt:
     update_cache: yes
